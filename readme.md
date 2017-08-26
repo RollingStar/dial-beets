@@ -5,8 +5,13 @@ My [beets](https://github.com/beetbox/beets) config and associated files. I don'
 # Installation
 
 * config.yaml goes [here](https://beets.readthedocs.io/en/latest/reference/config.html)
-* orig_date.py and copyartifactspy3.py go [here](http://beets.readthedocs.io/en/v1.4.5/dev/plugins.html?highlight=plugins), or search your computer for the "beetsplug" folder.
-* You may find it useful to install the titlecase package. It is used in the custom alb_title field.
+* Files in the "beetsplug" folder go [here](http://beets.readthedocs.io/en/v1.4.5/dev/plugins.html?highlight=plugins). Or, search your computer for the "beetsplug" folder.
+* The custom alb_title field uses the [titlecase](https://pypi.python.org/pypi/titlecase) package for Python.
+* Developed primarily on this machine:
+  - Windows 10 x64
+  - Powershell
+  - Python 3.6.2 (not Python 2.x, which also works with beets)
+  - Beets 1.4.5
 
 # License
 

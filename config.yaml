@@ -12,32 +12,7 @@ import:
     duplicate_action: keep
 per_disc_numbering: yes
 
-#some plugins you might find useful:
-#edit fromfilename 
-#the inline fetchart mbsync chroma
-#copyartifactspy3 is the "copyartifacts" plugin sent through Python's python2 -> python3 converter
-plugins: the inline fetchart copyartifactspy3 mbsync orig_date web
-#note: alb_title requires titlecase, a separate install
-
-#this should disambig. but doesn't work properly. will fix someday
-#%if{%right{%aunique{album $alb_orig_year_mm_dd,country label catalognum albumdisambig,},1}, [%aunique{album $alb_orig_year_mm_dd,country label catalognum albumdisambig,}]}
-
-#would be nice to use newlines, tabs, and comments here: https://github.com/beetbox/beets/issues/2147
-
-paths:
-    default: >-
-        %if{$albumartist,%the{$albumartist} - }%if{$alb_promo_boot,$alb_promo_boot%if{$alb_exotic_type,$, }}%if{$alb_exotic_type,$alb_exotic_type - }%if{%right{%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd,},1},%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd,} - ,$alb_orig_year - }$alb_title$i_cust_catalog%if{$alb_subset_bitrate, [$alb_subset_bitrate]}/%if{$i_disc_layer,$i_disc_layer-}$track. $title
-        
-    albumtype:single: >-
-        %if{$albumartist,%the{$albumartist} - }Singles/%if{$alb_promo_boot,$alb_promo_boot - }%if{$year,%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd country label catalognum albumdisambig} - }%if{$album,$alb_title - ,Non-Album - }$i_cust_catalog%if{$alb_subset_bitrate, [$alb_subset_bitrate] - }%if{$i_disc_layer,$i_disc_layer-}$track. $title
-        
-    #same as default, just split folders by disc titles if applicable (similarly, don't split by discs numbers if you split by disc titles)
-    comp: >-
-        %if{$albumartist,%the{$albumartist} - }%if{$alb_promo_boot,$alb_promo_boot%if{$alb_exotic_type,$, }}%if{$alb_exotic_type,$alb_exotic_type - }%if{%right{%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd country label catalognum albumdisambig,},1},%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd country label catalognum albumdisambig,} - ,$alb_orig_year - }%if{$disctitle,%if{$i_disc_layer,$i_disc_layer. }$disctitle,$alb_title}$i_cust_catalog%if{$alb_subset_bitrate, [$alb_subset_bitrate]}/%if{$disctitle,,%if{$i_disc_layer,$i_disc_layer-}}$track. $title
-        
-    #you need both this and the above "comp" to detect all types of compilations. I have no idea why.
-    albumtype:compilation: >-
-        %if{$albumartist,%the{$albumartist} - }%if{$alb_promo_boot,$alb_promo_boot%if{$alb_exotic_type,$, }}%if{$alb_exotic_type,$alb_exotic_type - }%if{%right{%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd country label catalognum albumdisambig,},1},%aunique{albumartist albumstatus albumtype,alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd country label catalognum albumdisambig,} - ,$alb_orig_year - }%if{$disctitle,%if{$i_disc_layer,$i_disc_layer. }$disctitle,$alb_title}$i_cust_catalog%if{$alb_subset_bitrate, [$alb_subset_bitrate]}/%if{$disctitle,,%if{$i_disc_layer,$i_disc_layer-}}$track. $title
+plugins: the inline fetchart copyartifactspy3 orig_date solo
 
 #maybe pointless. attempt to help with cmd.exe/powershell encoding issues for unicode text
 terminal_encoding:
@@ -66,8 +41,26 @@ musicbrainz:
     #5 (default) is good, but if you have massive boxsets, consider making it lower for a performance boost (untested how much difference this makes)
     #make higher for prolific artists (ex. Beatles) because otherwise, beets may pick the wrong release (especially picking the wrong release from the release group)
     searchlimit: 5
-    
+
+#"You can now customize the character substituted for path separators (e.g., /) in filenames via path_sep_replace. The default is an underscore. Use this setting with caution."
+#do this for replacing "/" in paths, i.e., in album titles
+#one would think this also makes the path seperator change from "/" but I have not found this to be the case. No issues on Windows thus far.
+path_sep_replace: '⧸'
+
 #replace only works on paths (shouldn't change any internal tags)
+
+#the "replace" setting seems to follow Python regex rules.
+# NOTE! Use Python 2.x or 3.x documentation depending on the Python version you're using with beets. See the output of `beet version`.
+# https://docs.python.org/2/library/re.html
+# sanitize_path within beets:
+# https://github.com/beetbox/beets/blob/68089ac8e913b8175876b50cc7086bba8f355a5f/beets/util/__init__.py#L563
+
+#any customization in "replace" causes beets to not use the default "replace" values.
+#So don't only half-fill out this section. If you put anything here, you have to make the whole
+#section robust to strange characters that can make OS filesystems complain.
+#see config_default.yaml in beets.
+
+#replace problematic characters with lookalikes
 replace:
     #BIG SOLIDUS
     '/': '⧸'
@@ -79,6 +72,8 @@ replace:
     '<': ˂
     #O2C3 MODIFIER LETTER RIGHT ARROWHEAD
     '>': ˃
+    #0702 SYRIAC SUBLINEAR FULL STOP (should change, looks bad in explorer)
+    '\.$': ܂
     '\s+$': ''
     '^\s+': ''
     #replace : with ։ (lookalike)
@@ -92,7 +87,7 @@ replace:
     #elipses are a bit annoying but this way avoids ending filenames with "."
     '[\.]{3}$': …
     #0702 SYRIAC SUBLINEAR FULL STOP
-    #this might cause issues. looks like it can activate right-to-left text mode (further testing needed)
+    #this might cause issues in Windows, looks like it sometimes appears to the left of the last word in the filename (further testing needed)
     '^\.': ܂
     #hopefully exclude DEL ␡ from the next Regex
     '␡': '␡'
@@ -101,16 +96,82 @@ replace:
     #commented out because it interpreted the end of every filename before the extension as a
     #control character. maybe this is because of "end of text" (U+0003)?
     #'[\x00-\x1f]': _
+    
+    #fake comment and fake tab options
+    #listen, these options are hacky. If you use symbols expected in context (like a quotation mark), you may break the comment you're trying to write.
+    #the best option in the long-term is real comment and tab support in the path config. This is just a workaround for readability reasons.
+    #there is an open issue for better newline support:
+    # https://github.com/beetbox/beets/issues/2147
+    #start comments in paths with `#` and end them with `zxc\`. The \ is to avoid adding a space after a newline. Inelegant solution that will fail on any section of path (any line?) with # and zxc in the same section. Ex. an album called "The Strange #zxc".
+    #do not put comments inside of %left, %right, or any other tag that truncates. Specifically, it seems that left% and similar functions evaluate first, before the replace regex. If your comment gets eaten by the function, it will no longer match the regex.
+    #top level comments are the safest; things get less stable the deeper in a nested function that you go. for example, a comma "," in an %if statement comment can give
+    #unintuitive results for the if statement.
+    '\#.*zxc': ''
+    #fake tab (4+ spaces) to have tabs in paths. will still match to any path that really should have 4+ spaces in it. Ex. an album called "Trouble    Maker"    
+    ' {4,}': ''
 
-#"You can now customize the character substituted for path separators (e.g., /) in filenames via path_sep_replace. The default is an underscore. Use this setting with caution."
-#do this for replacing "/" in paths, i.e., in album titles
-#one would think this also makes the path seperator change from "/" but I have not found this to be the case. No issues on Windows thus far.
-path_sep_replace: '⧸'
+#end all lines with a backslash: \
+#see precautions above in "replace" for using fake comments and/or fake tabs (4+ spaces)
 
-#changed blue and turquoise to darkblue and blue due to poor readability of turquoise on black
-#Available colors: black, darkred, darkgreen, brown (darkyellow), darkblue, purple (darkmagenta),
-# teal (darkcyan), lightgray, darkgray, red, green, yellow, blue, fuchsia (magenta), turquoise (cyan), white
+paths:
+    default: "%if{\
+         $albumartist,\
+         %the{\
+               $albumartist\
+              } - , \
+         %if{\
+              $artist,\
+              %the{\
+                    $artist\
+                   } - ,\
+              No Artist - \
+             }\
+        }\
+    %if{\
+      $alb_promo_boot,\
+      $alb_promo_boot%if{\
+                          $alb_exotic_type,\
+                          #add literal comma and space if promo_boot and exotic_type exist for the same album. zxc\
+                          #for example Promo comma Spoken Word zxc\
+                          $, , - \
+                        }\
+       }\
+    %if{\
+    $alb_exotic_type,\
+    $alb_exotic_type - \
+        }\
+    %if{\
+         %solo{\
+                albumartist albumstatus albumtype albumdisambig\
+              },\
+         $alb_orig_year - ,\
+         %aunique{\
+                   albumartist albumstatus albumtype albumdisambig, \
+                   alb_orig_year alb_orig_year_mm alb_orig_year_mm_dd,\
+                 } - \
+        }\
+    $alb_title\
+    %if{\
+         %solo{album $alb_orig_year_mm_dd albumartist albumstatus albumtype},\
+         ,\
+         %aunique{\
+              album $alb_orig_year_mm_dd albumartist albumstatus albumtype,\
+              albumdisambig country label catalognum,\
+              ()\
+            }\
+    }\
+    $i_cust_catalog%if{\
+                                   $alb_subset_bitrate, \
+                                   [$alb_subset_bitrate]\
+                      }\
+    /%if{\
+         $i_disc_layer,\
+         $i_disc_layer-\
+        }\
+    $track. $title"
+    
 #I still have not found a color scheme I really like for all this
+# https://beets.readthedocs.io/en/v1.4.5/reference/config.html#colors
 ui:
     color: yes
     colors:
@@ -128,13 +189,12 @@ art_filename: 'covauto'
 fetchart:
     #uses art_filename (see above)
     #Pick only trusted album art by ignoring filenames that do not contain one of the keywords in cover_names. Default: no.
-    #does this do anything if we are skipping "filesystem" next line?
     cautious: yes
     #skip filesystem; it causes conflicts (hard stops in beets import) when used alongside copyartifacts
-    #some of the latter items require API keys which are not configured. as such, they will not work (harmlessly fail) if you just use this config as-is 
+    #some of the latter items require API keys which are not configured. as such, they will not work if you just use this config as-is 
     sources: coverart amazon albumart wikipedia google fanarttv
 
-#posthumous not yet a possible distinguisher (something I want in the future)
+#posthumous is not yet a possible distinguisher (something I want in the future)
 # https://github.com/beetbox/beets/issues/2338
 
 album_fields:
@@ -143,17 +203,22 @@ album_fields:
         #speedup, official is most common
         if albumstatus == "Official":
             return ''
-        elif 'promotion' in albumstatus:
+        #case sensitive. Can use methods like the following link, but albumstatus is *supposed* to only take 1 of 4 values
+        # https://stackoverflow.com/questions/319426/how-do-i-do-a-case-insensitive-string-comparison-in-python
+        elif 'Promo' in albumstatus:
             return 'Promo'
-        elif 'bootleg' in albumstatus:
+        elif 'Bootleg' in albumstatus:
             return 'Bootleg'
         else:
             return ''
     alb_exotic_type: |
+        #for this and promo_boot, note that musicbrainz seems to store strings as lowercase: 'album'. yet beets seems to use
+        #title case: 'Album'. Further research needed.
         #no special noting of albums, EPs, and soundtracks
         if albumtype in {'album', 'ep', 'soundtrack'}:
            return ''
         #special case for proper spacing and caps
+        #todo, check that this is being caught properly
         elif 'spokenword' in albumtype:
            return 'Spoken Word'
         else:
