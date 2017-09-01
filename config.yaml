@@ -2,6 +2,7 @@ directory: e:\Music\
 library: e:\Music\beetslibrary.bib
 
 import:
+    log: e:\Music\beet.log
     copy: no
     move: yes
     write: yes
@@ -12,7 +13,7 @@ import:
     duplicate_action: keep
 per_disc_numbering: yes
 
-plugins: the inline fetchart copyartifactspy3 orig_date solo
+plugins: the inline fetchart copyartifactspy3 orig_date solo chroma
 
 #maybe pointless. attempt to help with cmd.exe/powershell encoding issues for unicode text
 terminal_encoding:
@@ -168,7 +169,16 @@ paths:
          $i_disc_layer,\
          $i_disc_layer-\
         }\
-    $track. $title"
+    %if{\
+        $track,\
+        $track. ,\
+        [no track number] \
+        }\
+    %if{\
+        $title,\
+        $title,\
+        [unknown]\
+        }"
     
 #I still have not found a color scheme I really like for all this
 # https://beets.readthedocs.io/en/v1.4.5/reference/config.html#colors
