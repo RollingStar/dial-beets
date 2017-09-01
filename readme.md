@@ -15,4 +15,4 @@ My [beets](https://github.com/beetbox/beets) config and associated files. I don'
 
 # License
 
-* copyartifactspy3 is copyartifacts run through 2to3.py. copyartifactspy3 is MIT Licensed.
+* copyartifactspy3 is [copyartifacts](https://github.com/sbarakat/beets-copyartifacts) run through 2to3.py. copyartifactspy3 is MIT Licensed.
