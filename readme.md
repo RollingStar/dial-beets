@@ -10,6 +10,7 @@ My [beets](https://github.com/beetbox/beets) config and associated files. I don'
 ```
 pip install pyacoustid
 pip install titlecase
+pip install requests
 ```
 
 * [Chroma instructions](https://beets.readthedocs.io/en/latest/plugins/chroma.html)
