@@ -6,13 +6,18 @@ My [beets](https://github.com/beetbox/beets) config and associated files. I don'
 
 * config.yaml goes [here](https://beets.readthedocs.io/en/latest/reference/config.html)
 * Files in the "beetsplug" folder go [here](http://beets.readthedocs.io/en/latest/dev/plugins.html?highlight=plugins). Or, search your computer for the "beetsplug" folder.
+
+```
+pip install pyacoustid
+pip install titlecase
+```
+
 * [Chroma instructions](https://beets.readthedocs.io/en/latest/plugins/chroma.html)
-* The custom alb_title field uses the [titlecase](https://pypi.python.org/pypi/titlecase) package for Python.
 * Developed primarily on this machine:
   - Windows 10 x64
-  - Powershell
-  - Python 3.6.2 (not Python 2.x, which also works with beets)
-  - Beets 1.4.5
+  - Powershell / [Cmder](https://github.com/cmderdev/cmder)
+  - Python 3.6+ (not Python 2.x, which also works with beets)
+  - Beets 1.4.5+
 
 # License
 
