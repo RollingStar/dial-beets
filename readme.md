@@ -5,7 +5,8 @@ My [beets](https://github.com/beetbox/beets) config and associated files. I don'
 # Installation
 
 * config.yaml goes [here](https://beets.readthedocs.io/en/latest/reference/config.html)
-* Files in the "beetsplug" folder go [here](http://beets.readthedocs.io/en/v1.4.5/dev/plugins.html?highlight=plugins). Or, search your computer for the "beetsplug" folder.
+* Files in the "beetsplug" folder go [here](http://beets.readthedocs.io/en/latest/dev/plugins.html?highlight=plugins). Or, search your computer for the "beetsplug" folder.
+* [Chroma instructions](https://beets.readthedocs.io/en/latest/plugins/chroma.html)
 * The custom alb_title field uses the [titlecase](https://pypi.python.org/pypi/titlecase) package for Python.
 * Developed primarily on this machine:
   - Windows 10 x64
