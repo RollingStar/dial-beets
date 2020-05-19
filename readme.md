@@ -2,6 +2,8 @@
 
 My [beets](https://github.com/beetbox/beets) config and associated files. I don't expect this to be set-and-forget useful to anyone except me. However, with minor changes you can make this config suit your needs as well. I hope it is a good demonstration of many of beets' advanced features.
 
+**Update 2020:** Here's an [updated config](https://gist.github.com/RollingStar/86e041338df295afbbf77a9027903068) just as unsupported as before and probably twice as messy.
+
 # Installation
 
 * config.yaml goes [here](https://beets.readthedocs.io/en/latest/reference/config.html)
